@@ -4,5 +4,11 @@
         "date": "2026-01-13",
         "tags": ["Linux", "排错"],
         "file": "posts/eg-connect-linux-deploy.md"
+    },
+    {
+        "title": "Markdown 语法学习",
+        "date": "2024-08-01",
+        "tags": ["Markdown", "教程"],
+        "file": "posts/markdown-syntax.md"
     }
 ]
