@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文章 - 个人博客</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+<body class="post-page">
+    <div class="container">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="header-left">
+                <img src="assets/img/avatar.svg" alt="avatar" class="avatar">
+            </div>
+            <nav class="nav">
+                <a href="index.html">首页</a>
+                <a href="categories">归类</a>
+                <a href="search">搜索</a>
+            </nav>
+        </header>
+
+        <!-- 文章正文（由 JS 动态渲染） -->
+        <main class="post">
+            <a href="index.html" class="back-link">&larr; 返回归档</a>
+            <div id="post-header" class="post-header" style="display:none;">
+                <h1 id="post-title"></h1>
+                <div class="post-meta">
+                    <span class="post-date" id="post-date"></span>
+                    <span class="post-tags" id="post-tags"></span>
+                </div>
+            </div>
+            <article class="post-content" id="post-content">
+                <p style="color:var(--text-secondary);text-align:center;padding:3rem 0;">加载中...</p>
+            </article>
+        </main>
+
+        <!-- 页脚 -->
+        <footer class="footer">
+            <p>&copy; 2024-2026 个人博客 · Powered by GitHub Pages</p>
+        </footer>
+    </div>
+
+    <script>
+        // 配置 marked
+        marked.setOptions({
+            breaks: true,
+            gfm: true
+        });
+
+        // 解析 YAML front matter
+        function parseFrontMatter(text) {
+            const fmRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+            const match = text.match(fmRegex);
+            if (!match) return { meta: {}, body: text };
+
+            const metaBlock = match[1];
+            const body = match[2];
+            const meta = {};
+
+            metaBlock.split('\n').forEach(function(line) {
+                const idx = line.indexOf(':');
+                if (idx > -1) {
+                    const key = line.substring(0, idx).trim();
+                    const val = line.substring(idx + 1).trim();
+                    meta[key] = val;
+                }
+            });
+
+            return { meta: meta, body: body };
+        }
+
+        // 格式化日期
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            if (isNaN(d)) return dateStr;
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return y + '/' + m + '/' + day;
+        }
+
+        // 主逻辑
+        async function loadPost() {
+            const params = new URLSearchParams(window.location.search);
+            const postFile = params.get('p');
+
+            if (!postFile) {
+                document.getElementById('post-content').innerHTML =
+                    '<p style="color:var(--text-secondary);text-align:center;padding:3rem 0;">未指定文章文件</p>';
+                return;
+            }
+
+            try {
+                const resp = await fetch(postFile);
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const text = await resp.text();
+
+                const { meta, body } = parseFrontMatter(text);
+
+                // 填充标题、日期、标签
+                if (meta.title) {
+                    document.title = meta.title + ' - 个人博客';
+                    document.getElementById('post-title').textContent = meta.title;
+                    document.getElementById('post-header').style.display = '';
+                }
+                if (meta.date) {
+                    document.getElementById('post-date').textContent = formatDate(meta.date);
+                }
+                if (meta.tags) {
+                    document.getElementById('post-tags').textContent = meta.tags;
+                }
+
+                // 渲染 Markdown
+                document.getElementById('post-content').innerHTML = marked.parse(body);
+            } catch (err) {
+                document.getElementById('post-content').innerHTML =
+                    '<p style="color:#f85149;text-align:center;padding:3rem 0;">文章加载失败: ' + err.message + '</p>';
+            }
+        }
+
+        loadPost();
+    </script>
+</body>
+</html>
