@@ -157,6 +157,155 @@ ul {
     font-size: 0.82rem;
 }
 
+/* ===== 文章详情页 ===== */
+.post-page .container {
+    max-width: 760px;
+}
+
+.post-header {
+    margin-bottom: 2.5rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-header h1 {
+    font-size: 1.6rem;
+    font-weight: 600;
+    color: var(--text-hover);
+    line-height: 1.4;
+    margin-bottom: 0.8rem;
+}
+
+.post-meta {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+.post-meta .post-date {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+}
+
+.post-meta .post-tags {
+    color: var(--accent);
+}
+
+.back-link {
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    transition: color 0.15s ease;
+}
+
+.back-link:hover {
+    color: var(--accent);
+}
+
+.post-content {
+    font-size: 0.95rem;
+    line-height: 1.8;
+    color: var(--text-primary);
+}
+
+.post-content h2 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-hover);
+    margin: 2.5rem 0 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.post-content h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-hover);
+    margin: 2rem 0 0.8rem;
+}
+
+.post-content p {
+    margin-bottom: 1rem;
+}
+
+.post-content ul,
+.post-content ol {
+    margin: 0.5rem 0 1.2rem 1.5rem;
+}
+
+.post-content ul {
+    list-style: disc;
+}
+
+.post-content ol {
+    list-style: decimal;
+}
+
+.post-content li {
+    margin-bottom: 0.4rem;
+    line-height: 1.7;
+}
+
+.post-content code {
+    font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    font-size: 0.85em;
+    background-color: rgba(110, 118, 129, 0.2);
+    padding: 0.15em 0.4em;
+    border-radius: 4px;
+    color: var(--text-primary);
+}
+
+.post-content pre {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 1rem 1.2rem;
+    overflow-x: auto;
+    margin: 1rem 0 1.5rem;
+    line-height: 1.5;
+}
+
+.post-content pre code {
+    background: none;
+    padding: 0;
+    font-size: 0.85rem;
+    color: var(--text-primary);
+}
+
+.post-content strong {
+    color: var(--text-hover);
+    font-weight: 600;
+}
+
+.post-content blockquote {
+    border-left: 3px solid var(--accent);
+    padding: 0.5rem 0 0.5rem 1rem;
+    margin: 1rem 0;
+    color: var(--text-secondary);
+    background-color: rgba(88, 166, 255, 0.05);
+    border-radius: 0 4px 4px 0;
+}
+
+.post-content hr {
+    border: none;
+    border-top: 1px solid var(--border-color);
+    margin: 2rem 0;
+}
+
+.post-content a {
+    color: var(--accent);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.15s ease;
+}
+
+.post-content a:hover {
+    color: var(--accent);
+    border-bottom-color: var(--accent);
+}
+
 /* ===== 响应式 ===== */
 @media (max-width: 640px) {
     .container {
