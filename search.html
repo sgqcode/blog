@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>搜索 - 个人博客</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="header-left">
+                <img src="assets/img/avatar.svg" alt="avatar" class="avatar">
+            </div>
+            <nav class="nav">
+                <a href="index.html">首页</a>
+                <a href="categories.html">归类</a>
+                <a href="search.html">搜索</a>
+            </nav>
+        </header>
+
+        <main>
+            <h1 class="page-title">搜索</h1>
+            <div class="search-box">
+                <input type="text" id="search-input" placeholder="输入关键词搜索文章标题或标签..." autocomplete="off">
+            </div>
+            <div class="search-results" id="search-results">
+                <p class="search-empty">输入关键词开始搜索</p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024-2026 个人博客 · Powered by GitHub Pages</p>
+        </footer>
+    </div>
+
+    <script>
+        var allPosts = [];
+
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            var d = new Date(dateStr);
+            if (isNaN(d)) return dateStr;
+            var y = d.getFullYear();
+            var m = String(d.getMonth() + 1).padStart(2, '0');
+            var day = String(d.getDate()).padStart(2, '0');
+            return y + '/' + m + '/' + day;
+        }
+
+        async function loadPosts() {
+            try {
+                var resp = await fetch('posts.json');
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                allPosts = await resp.json();
+                // 默认显示全部
+                renderResults('');
+            } catch (err) {
+                document.getElementById('search-results').innerHTML =
+                    '<p class="search-empty">加载失败: ' + err.message + '</p>';
+            }
+        }
+
+        function renderResults(keyword) {
+            var results;
+            if (!keyword) {
+                results = allPosts;
+            } else {
+                var kw = keyword.toLowerCase();
+                results = allPosts.filter(function(post) {
+                    var titleMatch = post.title.toLowerCase().indexOf(kw) > -1;
+                    var tagMatch = (post.tags || []).some(function(t) {
+                        return t.toLowerCase().indexOf(kw) > -1;
+                    });
+                    return titleMatch || tagMatch;
+                });
+            }
+
+            // 按日期降序
+            results.sort(function(a, b) { return b.date.localeCompare(a.date); });
+
+            var container = document.getElementById('search-results');
+
+            if (results.length === 0) {
+                container.innerHTML = '<p class="search-empty">未找到匹配的文章</p>';
+                return;
+            }
+
+            var html = '<ul class="post-list">';
+            results.forEach(function(post) {
+                html += '<li class="post-item">';
+                html += '<time datetime="' + post.date + '">' + formatDate(post.date) + '</time>';
+                html += '<a href="post.html?p=' + post.file + '" class="post-title">' + post.title + '</a>';
+                html += '<span class="tags">' + (post.tags || []).join('&nbsp;') + '</span>';
+                html += '</li>';
+            });
+            html += '</ul>';
+
+            if (!keyword) {
+                html = '<p class="search-empty" style="text-align:left;padding-bottom:1rem;">共 ' + results.length + ' 篇文章</p>' + html;
+            } else {
+                html = '<p class="search-empty" style="text-align:left;padding-bottom:1rem;">找到 ' + results.length + ' 篇匹配文章</p>' + html;
+            }
+
+            container.innerHTML = html;
+        }
+
+        document.getElementById('search-input').addEventListener('input', function(e) {
+            renderResults(e.target.value.trim());
+        });
+
+        loadPosts();
+    </script>
+</body>
+</html>

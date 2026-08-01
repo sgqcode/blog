@@ -306,6 +306,71 @@ ul {
     border-bottom-color: var(--accent);
 }
 
+/* ===== 归类页 ===== */
+.category-group {
+    margin-bottom: 2.5rem;
+}
+
+.category-group h2 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: var(--text-hover);
+    margin-bottom: 1rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.category-group .tag-count {
+    color: var(--text-secondary);
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-left: 0.5rem;
+}
+
+/* ===== 搜索页 ===== */
+.search-box {
+    margin-bottom: 2rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 0.7rem 1rem;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    font-family: inherit;
+    outline: none;
+    transition: border-color 0.15s ease;
+}
+
+.search-box input::placeholder {
+    color: var(--text-secondary);
+}
+
+.search-box input:focus {
+    border-color: var(--accent);
+}
+
+.search-results {
+    margin-top: 1rem;
+}
+
+.search-empty {
+    text-align: center;
+    color: var(--text-secondary);
+    padding: 2rem 0;
+    font-size: 0.9rem;
+}
+
+.page-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--text-hover);
+    margin-bottom: 2rem;
+}
+
 /* ===== 响应式 ===== */
 @media (max-width: 640px) {
     .container {

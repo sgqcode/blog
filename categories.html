@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>归类 - 个人博客</title>
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- 顶部导航 -->
+        <header class="header">
+            <div class="header-left">
+                <img src="assets/img/avatar.svg" alt="avatar" class="avatar">
+            </div>
+            <nav class="nav">
+                <a href="index.html">首页</a>
+                <a href="categories.html">归类</a>
+                <a href="search.html">搜索</a>
+            </nav>
+        </header>
+
+        <main>
+            <h1 class="page-title">归类</h1>
+            <div id="categories-content">
+                <p style="color:var(--text-secondary);text-align:center;padding:3rem 0;">加载中...</p>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2024-2026 个人博客 · Powered by GitHub Pages</p>
+        </footer>
+    </div>
+
+    <script>
+        function formatDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            if (isNaN(d)) return dateStr;
+            const y = d.getFullYear();
+            const m = String(d.getMonth() + 1).padStart(2, '0');
+            const day = String(d.getDate()).padStart(2, '0');
+            return y + '/' + m + '/' + day;
+        }
+
+        async function loadCategories() {
+            try {
+                const resp = await fetch('posts.json');
+                if (!resp.ok) throw new Error('HTTP ' + resp.status);
+                const posts = await resp.json();
+
+                // 按标签分组
+                const tagMap = {};
+                posts.forEach(function(post) {
+                    const tags = post.tags || ['未分类'];
+                    tags.forEach(function(tag) {
+                        if (!tagMap[tag]) tagMap[tag] = [];
+                        tagMap[tag].push(post);
+                    });
+                });
+
+                // 按文章数量降序排列标签
+                const sortedTags = Object.keys(tagMap).sort(function(a, b) {
+                    return tagMap[b].length - tagMap[a].length;
+                });
+
+                let html = '';
+                sortedTags.forEach(function(tag) {
+                    const tagPosts = tagMap[tag];
+                    html += '<section class="category-group">';
+                    html += '<h2>' + tag + ' <span class="tag-count">(' + tagPosts.length + ' 篇)</span></h2>';
+                    html += '<ul class="post-list">';
+                    // 按日期降序
+                    tagPosts.sort(function(a, b) { return b.date.localeCompare(a.date); });
+                    tagPosts.forEach(function(post) {
+                        html += '<li class="post-item">';
+                        html += '<time datetime="' + post.date + '">' + formatDate(post.date) + '</time>';
+                        html += '<a href="post.html?p=' + post.file + '" class="post-title">' + post.title + '</a>';
+                        html += '<span class="tags">' + (post.tags || []).join('&nbsp;') + '</span>';
+                        html += '</li>';
+                    });
+                    html += '</ul>';
+                    html += '</section>';
+                });
+
+                document.getElementById('categories-content').innerHTML = html;
+            } catch (err) {
+                document.getElementById('categories-content').innerHTML =
+                    '<p class="search-empty">加载失败: ' + err.message + '</p>';
+            }
+        }
+
+        loadCategories();
+    </script>
+</body>
+</html>
